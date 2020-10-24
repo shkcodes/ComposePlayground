@@ -2,11 +2,13 @@ package com.shkcodes.composeplayground
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.Text
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material.OutlinedButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -47,6 +49,25 @@ class MainActivity : AppCompatActivity() {
         Column(modifier = Modifier.padding(horizontal = 16.dp)) {
             location()
             greeting()
+            searchBox()
+        }
+    }
+
+    @Composable
+    private fun searchBox() {
+        OutlinedButton(
+            modifier = Modifier.padding(top = 24.dp),
+            onClick = { },
+            border = BorderStroke(1.dp, Color.White.copy(alpha = 0.2F)),
+            backgroundColor = Color(0xFF191919),
+            shape = CircleShape
+        ) {
+            Text(
+                text = "Search Place",
+                style = TextStyles.default.copy(color = Color.White.copy(alpha = 0.7F))
+            )
+            Spacer(modifier = Modifier.weight(1F))
+            Image(asset = vectorResource(id = R.drawable.ic_search))
         }
     }
 
@@ -104,7 +125,10 @@ class MainActivity : AppCompatActivity() {
                     )
                 )
             }
-            Image(asset = imageResource(id = R.drawable.ic_menu), modifier = Modifier.size(28.dp))
+            Image(
+                asset = imageResource(id = R.drawable.ic_menu),
+                modifier = Modifier.size(28.dp)
+            )
         }
     }
 
