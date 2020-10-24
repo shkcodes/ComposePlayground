@@ -14,17 +14,19 @@ private val colorPalette = darkColors(
     primary = Color(0xFF0DE791),
     primaryVariant = Color(0xFF0AAF6E),
     onPrimary = Color(0xFFFFFFFF),
-    secondary = Color(0xFFFF7A53),
+    secondary = Colors.accent,
     surface = Color(0xFF212121),
     onSecondary = Color(0xFF0DE791),
     onSurface = Color(0xFF0DE791),
-    onBackground = Color(0xFF191919),
+    onBackground = Colors.dark,
     error = Color(0xFFFF0000),
     onError = Color(0xFFFFFFFF)
 )
 
 object Colors {
-    val sidebarColor = Color(0xFF2B2B2B)
+    val sidebar = Color(0xFF2B2B2B)
+    val accent = Color(0xFFFFC107)
+    val dark = Color(0xFF191919)
 }
 
 object TextStyles {

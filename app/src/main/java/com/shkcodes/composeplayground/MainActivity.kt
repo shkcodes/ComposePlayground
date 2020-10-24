@@ -8,8 +8,10 @@ import androidx.compose.foundation.Text
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material.Button
 import androidx.compose.material.OutlinedButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -50,6 +52,36 @@ class MainActivity : AppCompatActivity() {
             location()
             greeting()
             searchBox()
+            filters()
+        }
+    }
+
+    @OptIn(ExperimentalLayout::class)
+    @Composable
+    private fun filters() {
+        val selectedIndices = mutableStateListOf<Filter>()
+        Box(modifier = Modifier.padding(top = 24.dp)) {
+            FlowRow(crossAxisSpacing = 16.dp, mainAxisSpacing = 8.dp) {
+                Filter.values().forEach {
+                    val isSelected = selectedIndices.contains(it)
+                    Button(
+                        onClick = {
+                            if (isSelected) selectedIndices.remove(it)
+                            else selectedIndices.add(it)
+                        },
+                        backgroundColor = if (isSelected) Colors.accent else Colors.sidebar,
+                        shape = CircleShape
+                    ) {
+                        Text(
+                            text = "$it",
+                            style = TextStyles.default.copy(
+                                fontFamily = fontFamily(font(R.font.champagne_bold)),
+                                color = if (isSelected) Colors.dark else Color.White.copy(alpha = 0.7F)
+                            ),
+                        )
+                    }
+                }
+            }
         }
     }
 
@@ -59,7 +91,7 @@ class MainActivity : AppCompatActivity() {
             modifier = Modifier.padding(top = 24.dp),
             onClick = { },
             border = BorderStroke(1.dp, Color.White.copy(alpha = 0.2F)),
-            backgroundColor = Color(0xFF191919),
+            backgroundColor = Colors.dark,
             shape = CircleShape
         ) {
             Text(
@@ -74,7 +106,7 @@ class MainActivity : AppCompatActivity() {
     @Composable
     private fun greeting() {
         Column(
-            modifier = Modifier.padding(top = 48.dp),
+            modifier = Modifier.padding(top = 36.dp),
         ) {
             Text(
                 text = "Hi Shashank,", style = TextStyles.default.copy(
@@ -137,7 +169,7 @@ class MainActivity : AppCompatActivity() {
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
             modifier = Modifier.width(64.dp)
-                .background(color = Colors.sidebarColor)
+                .background(color = Colors.sidebar)
                 .padding(vertical = 8.dp)
         ) {
             Image(
@@ -167,4 +199,8 @@ class MainActivity : AppCompatActivity() {
             }
         }
     }
+}
+
+enum class Filter {
+    Foods, Wine, Mediterranean, Tomato, India, Butter
 }
