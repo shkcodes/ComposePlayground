@@ -21,7 +21,10 @@ import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.SpanStyleRange
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.font.font
+import androidx.compose.ui.text.font.fontFamily
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 
 class MainActivity : AppCompatActivity() {
 
@@ -41,10 +44,35 @@ class MainActivity : AppCompatActivity() {
 
     @Composable
     private fun mainContent() {
-        Column {
+        Column(modifier = Modifier.padding(horizontal = 16.dp)) {
             location()
+            greeting()
         }
     }
+
+    @Composable
+    private fun greeting() {
+        Column(
+            modifier = Modifier.padding(top = 48.dp),
+        ) {
+            Text(
+                text = "Hi Shashank,", style = TextStyles.default.copy(
+                    fontSize = 24.sp, fontFamily = fontFamily(
+                        font(R.font.champagne_bold)
+                    ),
+                    fontWeight = FontWeight.Bold
+                )
+            )
+            Text(
+                text = "Let's start your journey of food and eating",
+                style = TextStyles.default.copy(
+                    fontSize = 20.sp,
+                    color = Color.White.copy(alpha = 0.7F)
+                )
+            )
+        }
+    }
+
 
     @Composable
     private fun location() {
@@ -61,20 +89,22 @@ class MainActivity : AppCompatActivity() {
                         "Hisar, Haryana", spanStyles = listOf(
                             SpanStyleRange(
                                 SpanStyle(
-                                    color = Color.White
+                                    color = Color.White,
+                                    fontFamily = fontFamily(font(R.font.champagne))
                                 ), 0, 6
                             ),
                             SpanStyleRange(
                                 SpanStyle(
                                     color = Color.White,
-                                    fontWeight = FontWeight.Bold
+                                    fontWeight = FontWeight.Bold,
+                                    fontFamily = fontFamily(font(R.font.champagne))
                                 ), 6, 14
                             )
                         )
                     )
                 )
             }
-            Image(asset = vectorResource(id = R.drawable.ic_menu))
+            Image(asset = imageResource(id = R.drawable.ic_menu), modifier = Modifier.size(28.dp))
         }
     }
 

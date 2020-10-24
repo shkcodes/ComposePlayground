@@ -28,11 +28,14 @@ object Colors {
 }
 
 object TextStyles {
-    val default = TextStyle(color = Color.White)
+    val default = TextStyle(
+        color = Color.White,
+        fontFamily = fontFamily(font(R.font.champagne))
+    )
 
     val sidebar = default.copy(
-        fontFamily = fontFamily(font(R.font.rokkitt_light)),
-        fontSize = 20.sp
+        fontSize = 20.sp,
+        fontFamily = fontFamily(font(R.font.champagne_bold))
     )
 }
 
