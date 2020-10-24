@@ -4,6 +4,11 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.darkColors
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.font
+import androidx.compose.ui.text.font.fontFamily
+import androidx.compose.ui.unit.TextUnit
+import androidx.compose.ui.unit.sp
 
 
 private val colorPalette = darkColors(
@@ -18,6 +23,19 @@ private val colorPalette = darkColors(
     error = Color(0xFFFF0000),
     onError = Color(0xFFFFFFFF)
 )
+
+object Colors {
+    val sidebarColor = Color(0xFF2B2B2B)
+}
+
+object TextStyles {
+    val sidebarTextStyle =
+        TextStyle(
+            fontFamily = fontFamily(font(R.font.rokkitt_light)), color = Color.White,
+            fontSize = 20.sp
+        )
+}
+
 
 @Composable
 fun PlaygroundTheme(
