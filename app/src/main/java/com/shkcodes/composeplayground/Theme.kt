@@ -7,7 +7,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.font
 import androidx.compose.ui.text.font.fontFamily
-import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.sp
 
 
@@ -29,11 +28,12 @@ object Colors {
 }
 
 object TextStyles {
-    val sidebarTextStyle =
-        TextStyle(
-            fontFamily = fontFamily(font(R.font.rokkitt_light)), color = Color.White,
-            fontSize = 20.sp
-        )
+    val default = TextStyle(color = Color.White)
+
+    val sidebar = default.copy(
+        fontFamily = fontFamily(font(R.font.rokkitt_light)),
+        fontSize = 20.sp
+    )
 }
 
 

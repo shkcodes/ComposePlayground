@@ -12,9 +12,15 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.drawLayer
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.setContent
 import androidx.compose.ui.res.imageResource
+import androidx.compose.ui.res.vectorResource
+import androidx.compose.ui.text.AnnotatedString
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.SpanStyleRange
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 
 class MainActivity : AppCompatActivity() {
@@ -27,13 +33,53 @@ class MainActivity : AppCompatActivity() {
             PlaygroundTheme {
                 Row {
                     sidebar()
+                    mainContent()
                 }
             }
         }
     }
 
     @Composable
-    fun sidebar() {
+    private fun mainContent() {
+        Column {
+            location()
+        }
+    }
+
+    @Composable
+    private fun location() {
+        Row(modifier = Modifier.padding(top = 24.dp, start = 8.dp, end = 8.dp)) {
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.Center,
+                modifier = Modifier.weight(1F)
+            ) {
+                Image(asset = vectorResource(id = R.drawable.ic_location))
+                Spacer(modifier = Modifier.width(8.dp))
+                Text(
+                    text = AnnotatedString(
+                        "Hisar, Haryana", spanStyles = listOf(
+                            SpanStyleRange(
+                                SpanStyle(
+                                    color = Color.White
+                                ), 0, 6
+                            ),
+                            SpanStyleRange(
+                                SpanStyle(
+                                    color = Color.White,
+                                    fontWeight = FontWeight.Bold
+                                ), 6, 14
+                            )
+                        )
+                    )
+                )
+            }
+            Image(asset = vectorResource(id = R.drawable.ic_menu))
+        }
+    }
+
+    @Composable
+    private fun sidebar() {
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
             modifier = Modifier.width(64.dp)
@@ -51,17 +97,17 @@ class MainActivity : AppCompatActivity() {
             ) {
                 Text(
                     text = "First Food",
-                    style = TextStyles.sidebarTextStyle,
+                    style = TextStyles.sidebar,
                     modifier = rotationModifier.size(100.dp)
                 )
                 Text(
                     text = "Salad",
-                    style = TextStyles.sidebarTextStyle,
+                    style = TextStyles.sidebar,
                     modifier = rotationModifier.size(100.dp)
                 )
                 Text(
                     text = "Sea Food",
-                    style = TextStyles.sidebarTextStyle,
+                    style = TextStyles.sidebar,
                     modifier = rotationModifier.size(100.dp)
                 )
             }
