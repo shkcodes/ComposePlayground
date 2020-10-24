@@ -27,6 +27,7 @@ object Colors {
     val sidebar = Color(0xFF2B2B2B)
     val accent = Color(0xFFFFC107)
     val dark = Color(0xFF191919)
+    val favoriteButton = Color(0xFFFDF4F2)
 }
 
 object TextStyles {

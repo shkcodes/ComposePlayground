@@ -1,14 +1,15 @@
 package com.shkcodes.composeplayground
 
 import android.os.Bundle
+import androidx.annotation.DrawableRes
 import androidx.appcompat.app.AppCompatActivity
-import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.Text
-import androidx.compose.foundation.background
+import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Button
+import androidx.compose.material.Card
 import androidx.compose.material.OutlinedButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateListOf
@@ -24,6 +25,7 @@ import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.SpanStyleRange
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.font.font
 import androidx.compose.ui.text.font.fontFamily
@@ -53,6 +55,79 @@ class MainActivity : AppCompatActivity() {
             greeting()
             searchBox()
             filters()
+            carousel()
+        }
+    }
+
+    @Composable
+    private fun carousel() {
+        ScrollableRow(modifier = Modifier.fillMaxWidth().padding(top = 24.dp)) {
+            for (item in CarouselItems.values()) {
+                Card(
+                    modifier = Modifier.padding(horizontal = 8.dp).size(175.dp, 275.dp),
+                    backgroundColor = Color.White,
+                    shape = RoundedCornerShape(16.dp)
+                ) {
+                    Column(Modifier.padding(start = 16.dp, end = 8.dp)) {
+                        Image(
+                            asset = imageResource(id = item.image),
+                            modifier = Modifier.size(150.dp).align(Alignment.CenterHorizontally)
+                        )
+                        Row(
+                            Modifier.padding(top = 8.dp),
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Image(
+                                asset = vectorResource(id = R.drawable.ic_star),
+                                modifier = Modifier.size(8.dp)
+                            )
+                            Spacer(modifier = Modifier.width(8.dp))
+                            Text(
+                                text = "5.0",
+                                color = Colors.dark.copy(alpha = 0.5F),
+                                fontSize = 12.sp
+                            )
+                        }
+                        Spacer(Modifier.height(4.dp))
+                        Text(
+                            text = item.title,
+                            style = TextStyle(
+                                fontFamily = fontFamily(font(R.font.champagne_bold)),
+                                fontSize = 16.sp
+                            )
+                        )
+                        Spacer(Modifier.height(4.dp))
+                        Text(
+                            text = item.subtitle,
+                            style = TextStyle(
+                                fontFamily = fontFamily(font(R.font.champagne_bold)),
+                                fontSize = 14.sp,
+                                color = Colors.dark.copy(alpha = 0.5F)
+                            )
+                        )
+                        Spacer(Modifier.height(8.dp))
+                        Text(
+                            text = item.price,
+                            style = TextStyle(
+                                fontFamily = fontFamily(font(R.font.champagne_bold)),
+                                fontSize = 14.sp,
+                                color = Color.Black
+                            )
+                        )
+                        Row(
+                            horizontalArrangement = Arrangement.End,
+                            modifier = Modifier.fillMaxWidth()
+                        ) {
+                            Box(
+                                modifier = Modifier.background(Colors.favoriteButton, CircleShape)
+                                    .padding(4.dp)
+                            ) {
+                                Image(asset = vectorResource(id = R.drawable.ic_favorite))
+                            }
+                        }
+                    }
+                }
+            }
         }
     }
 
@@ -203,4 +278,15 @@ class MainActivity : AppCompatActivity() {
 
 enum class Filter {
     Foods, Wine, Mediterranean, Tomato, India, Butter
+}
+
+enum class CarouselItems(
+    val title: String,
+    val subtitle: String,
+    val price: String,
+    @DrawableRes val image: Int
+) {
+    Burger("Double Patty Burger", "With Fresh Onions", "$12.00", R.drawable.burger),
+    HotDog("Hot Dog Sausage", "With Stale Onions", "$11.00", R.drawable.hot_dog),
+    Pizza("Mario\'s Special Pizza", "With No Onions", "$18.00", R.drawable.pizza)
 }
