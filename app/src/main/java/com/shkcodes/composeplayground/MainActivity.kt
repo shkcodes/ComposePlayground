@@ -50,19 +50,122 @@ class MainActivity : AppCompatActivity() {
 
     @Composable
     private fun mainContent() {
-        Column(modifier = Modifier.padding(horizontal = 16.dp)) {
+        ScrollableColumn(modifier = Modifier.padding(horizontal = 16.dp)) {
             location()
             greeting()
             searchBox()
             filters()
             carousel()
+            recommendations()
+        }
+    }
+
+    @Composable
+    private fun recommendations() {
+        Column(modifier = Modifier.padding(vertical = 16.dp)) {
+            Row {
+                Text(text = "Recommended Places", style = TextStyles.sidebar.copy(fontSize = 16.sp))
+                Spacer(Modifier.weight(1F))
+                Text(
+                    text = "More",
+                    style = TextStyles.sidebar.copy(fontSize = 16.sp, color = Colors.accent)
+                )
+            }
+            Spacer(modifier = Modifier.height(8.dp))
+
+            recommendedDishes.forEach { dish ->
+                ConstraintLayout(
+                    modifier = Modifier.fillMaxWidth().height(84.dp).padding(vertical = 16.dp),
+                ) {
+                    val (image, card, title, subtitle, price, rating) = createRefs()
+                    val guideline = createGuidelineFromStart(0.15F)
+                    Box(
+                        modifier = Modifier.padding(vertical = 16.dp).height(70.dp)
+                            .constrainAs(card) {
+                                end.linkTo(parent.end)
+                                start.linkTo(guideline)
+                                top.linkTo(parent.top)
+                                bottom.linkTo(parent.bottom)
+                                width = Dimension.fillToConstraints
+                            }.background(Color.White, RoundedCornerShape(12.dp))
+                    ) {
+
+                    }
+                    Text(
+                        text = dish.name,
+                        style = TextStyle(
+                            fontFamily = fontFamily(font(R.font.champagne_bold)),
+                            fontSize = 16.sp,
+                            color = Colors.dark
+                        ),
+                        modifier = Modifier.constrainAs(title) {
+                            top.linkTo(card.top)
+                            start.linkTo(image.end)
+                        })
+                    Text(
+                        text = dish.price,
+                        style = TextStyle(
+                            fontFamily = fontFamily(font(R.font.champagne_bold)),
+                            fontSize = 14.sp,
+                            color = Colors.dark
+                        ),
+                        modifier = Modifier.constrainAs(price) {
+                            top.linkTo(card.top)
+                            end.linkTo(card.end)
+                        }.padding(end = 8.dp, start = 4.dp)
+                    )
+                    Text(
+                        text = dish.description,
+                        style = TextStyle(
+                            fontFamily = fontFamily(font(R.font.champagne)),
+                            fontSize = 12.sp,
+                            color = Colors.dark.copy(alpha = 0.5F),
+                        ),
+                        modifier = Modifier.constrainAs(subtitle) {
+                            top.linkTo(title.bottom)
+                            linkTo(image.end, rating.start, bias = 0F)
+                            width = Dimension.percent(0.4F)
+                        }.padding(top = 8.dp, end = 4.dp, start = 4.dp)
+                    )
+                    Row(
+                        Modifier.constrainAs(rating) {
+                            end.linkTo(card.end)
+                            top.linkTo(subtitle.top)
+                            bottom.linkTo(subtitle.bottom)
+                        }.padding(end = 8.dp, top = 8.dp),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Image(
+                            asset = vectorResource(id = R.drawable.ic_star),
+                            modifier = Modifier.size(8.dp)
+                        )
+                        Spacer(modifier = Modifier.width(4.dp))
+                        Text(
+                            text = "5.0",
+                            color = Colors.dark.copy(alpha = 0.5F),
+                            fontSize = 12.sp
+                        )
+                    }
+                    Image(
+                        asset = imageResource(id = dish.image),
+                        modifier = Modifier.constrainAs(image) {
+                            start.linkTo(guideline)
+                            end.linkTo(guideline)
+                            top.linkTo(parent.top)
+                            bottom.linkTo(parent.bottom)
+                            height = Dimension.value(84.dp)
+                            width = Dimension.value(84.dp)
+                        }
+                    )
+                }
+            }
         }
     }
 
     @Composable
     private fun carousel() {
         ScrollableRow(modifier = Modifier.fillMaxWidth().padding(top = 24.dp)) {
-            for (item in CarouselItems.values()) {
+            carouselDishes.forEach { dish ->
                 Card(
                     modifier = Modifier.padding(horizontal = 8.dp).size(175.dp, 275.dp),
                     backgroundColor = Color.White,
@@ -70,7 +173,7 @@ class MainActivity : AppCompatActivity() {
                 ) {
                     Column(Modifier.padding(start = 16.dp, end = 8.dp)) {
                         Image(
-                            asset = imageResource(id = item.image),
+                            asset = imageResource(id = dish.image),
                             modifier = Modifier.size(150.dp).align(Alignment.CenterHorizontally)
                         )
                         Row(
@@ -90,7 +193,7 @@ class MainActivity : AppCompatActivity() {
                         }
                         Spacer(Modifier.height(4.dp))
                         Text(
-                            text = item.title,
+                            text = dish.name,
                             style = TextStyle(
                                 fontFamily = fontFamily(font(R.font.champagne_bold)),
                                 fontSize = 16.sp
@@ -98,7 +201,7 @@ class MainActivity : AppCompatActivity() {
                         )
                         Spacer(Modifier.height(4.dp))
                         Text(
-                            text = item.subtitle,
+                            text = dish.description,
                             style = TextStyle(
                                 fontFamily = fontFamily(font(R.font.champagne_bold)),
                                 fontSize = 14.sp,
@@ -107,7 +210,7 @@ class MainActivity : AppCompatActivity() {
                         )
                         Spacer(Modifier.height(8.dp))
                         Text(
-                            text = item.price,
+                            text = dish.price,
                             style = TextStyle(
                                 fontFamily = fontFamily(font(R.font.champagne_bold)),
                                 fontSize = 14.sp,
@@ -280,13 +383,26 @@ enum class Filter {
     Foods, Wine, Mediterranean, Tomato, India, Butter
 }
 
-enum class CarouselItems(
-    val title: String,
-    val subtitle: String,
+data class Dish(
+    val name: String,
+    val description: String,
     val price: String,
     @DrawableRes val image: Int
-) {
-    Burger("Double Patty Burger", "With Fresh Onions", "$12.00", R.drawable.burger),
-    HotDog("Hot Dog Sausage", "With Stale Onions", "$11.00", R.drawable.hot_dog),
-    Pizza("Mario\'s Special Pizza", "With No Onions", "$18.00", R.drawable.pizza)
-}
+)
+
+val carouselDishes = listOf(
+    Dish("Double Patty Burger", "With Fresh Onions", "$12.00", R.drawable.burger),
+    Dish("Hot Dog Sausage", "With Stale Onions", "$11.00", R.drawable.hot_dog),
+    Dish("Mario\'s Special Pizza", "With No Onions", "$18.00", R.drawable.pizza)
+)
+
+val recommendedDishes = mutableStateListOf(
+    Dish(
+        "Beef Steak",
+        "Very popular with noisy tourists, it is amazing",
+        "$24.00",
+        R.drawable.plate_1
+    ),
+    Dish("Mutton Steak", "Not really recommended", "$38.00", R.drawable.plate_2),
+    Dish("Vegan Stuff", "Not as popular as the above one", "$500.05", R.drawable.plate_3)
+)
