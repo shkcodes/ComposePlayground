@@ -9,7 +9,6 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Button
-import androidx.compose.material.Card
 import androidx.compose.material.OutlinedButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateListOf
@@ -18,6 +17,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.drawLayer
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Path
+import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.setContent
 import androidx.compose.ui.res.imageResource
@@ -163,21 +164,72 @@ class MainActivity : AppCompatActivity() {
     }
 
     @Composable
+    private fun carouselBackground(modifier: Modifier, content: @Composable () -> Unit) {
+        val brush = SolidColor(Color.White)
+        Box(modifier = modifier) {
+            Canvas(
+                modifier = Modifier,
+                onDraw = {
+                    val path = Path().apply {
+                        moveTo(0F, 20.dp.toPx())
+                        cubicTo(
+                            0F,
+                            20.dp.toPx(),
+                            5.dp.toPx(),
+                            5.dp.toPx(),
+                            20.dp.toPx(),
+                            10.dp.toPx()
+                        )
+                        lineTo(140.dp.toPx(), 30.dp.toPx())
+                        cubicTo(
+                            140.dp.toPx(),
+                            30.dp.toPx(),
+                            170.dp.toPx(),
+                            30.dp.toPx(),
+                            170.dp.toPx(),
+                            50.dp.toPx()
+                        )
+                        lineTo(170.dp.toPx(), 230.dp.toPx())
+                        cubicTo(
+                            170.dp.toPx(),
+                            240.dp.toPx(),
+                            170.dp.toPx(),
+                            260.dp.toPx(),
+                            140.dp.toPx(),
+                            255.dp.toPx()
+                        )
+                        lineTo(35F, 235.dp.toPx())
+                        cubicTo(
+                            35.dp.toPx(),
+                            235.dp.toPx(),
+                            0.dp.toPx(),
+                            245.dp.toPx(),
+                            0.dp.toPx(),
+                            210.dp.toPx()
+                        )
+                    }
+                    drawPath(path, brush)
+                })
+
+            content()
+        }
+    }
+
+    @Composable
     private fun carousel() {
         ScrollableRow(modifier = Modifier.fillMaxWidth().padding(top = 24.dp)) {
             carouselDishes.forEach { dish ->
-                Card(
-                    modifier = Modifier.padding(horizontal = 8.dp).size(175.dp, 275.dp),
-                    backgroundColor = Color.White,
-                    shape = RoundedCornerShape(16.dp)
+                carouselBackground(
+                    modifier = Modifier.padding(horizontal = 8.dp).size(175.dp, 275.dp)
                 ) {
                     Column(Modifier.padding(start = 16.dp, end = 8.dp)) {
                         Image(
                             asset = imageResource(id = dish.image),
                             modifier = Modifier.size(150.dp).align(Alignment.CenterHorizontally)
+                                .offset(y = (-20).dp)
                         )
                         Row(
-                            Modifier.padding(top = 8.dp),
+                            modifier = Modifier.offset(y = (-20).dp),
                             verticalAlignment = Alignment.CenterVertically
                         ) {
                             Image(
@@ -193,6 +245,7 @@ class MainActivity : AppCompatActivity() {
                         }
                         Spacer(Modifier.height(4.dp))
                         Text(
+                            modifier = Modifier.offset(y = (-20).dp),
                             text = dish.name,
                             style = TextStyle(
                                 fontFamily = fontFamily(font(R.font.champagne_bold)),
@@ -201,6 +254,7 @@ class MainActivity : AppCompatActivity() {
                         )
                         Spacer(Modifier.height(4.dp))
                         Text(
+                            modifier = Modifier.offset(y = (-20).dp),
                             text = dish.description,
                             style = TextStyle(
                                 fontFamily = fontFamily(font(R.font.champagne_bold)),
@@ -210,6 +264,7 @@ class MainActivity : AppCompatActivity() {
                         )
                         Spacer(Modifier.height(8.dp))
                         Text(
+                            modifier = Modifier.offset(y = (-20).dp),
                             text = dish.price,
                             style = TextStyle(
                                 fontFamily = fontFamily(font(R.font.champagne_bold)),
@@ -219,7 +274,7 @@ class MainActivity : AppCompatActivity() {
                         )
                         Row(
                             horizontalArrangement = Arrangement.End,
-                            modifier = Modifier.fillMaxWidth()
+                            modifier = Modifier.fillMaxWidth().offset(y = (-10).dp)
                         ) {
                             Box(
                                 modifier = Modifier.background(Colors.favoriteButton, CircleShape)
