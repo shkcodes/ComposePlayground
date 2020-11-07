@@ -9,9 +9,12 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Button
+import androidx.compose.material.ButtonConstants
 import androidx.compose.material.OutlinedButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -32,18 +35,36 @@ import androidx.compose.ui.text.font.font
 import androidx.compose.ui.text.font.fontFamily
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.navigate
+import androidx.navigation.compose.rememberNavController
+import com.shkcodes.composeplayground.FoodTypes.*
 
 class MainActivity : AppCompatActivity() {
-
-    private val rotationModifier = Modifier.drawLayer(rotationZ = -90F)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
             PlaygroundTheme {
+                val navController: NavHostController = rememberNavController()
                 Row {
-                    sidebar()
-                    mainContent()
+                    sidebar(navController)
+                    NavHost(
+                        navController = navController,
+                        startDestination = SeaFood.name,
+                    ) {
+                        composable(SeaFood.name) {
+                            mainContent()
+                        }
+                        composable(Salad.name) {
+                            salad()
+                        }
+                        composable(FirstFood.name) {
+                            firstFood()
+                        }
+                    }
                 }
             }
         }
@@ -302,7 +323,7 @@ class MainActivity : AppCompatActivity() {
                             if (isSelected) selectedIndices.remove(it)
                             else selectedIndices.add(it)
                         },
-                        backgroundColor = if (isSelected) Colors.accent else Colors.sidebar,
+                        colors = ButtonConstants.defaultButtonColors(backgroundColor = if (isSelected) Colors.accent else Colors.sidebar),
                         shape = CircleShape
                     ) {
                         Text(
@@ -324,7 +345,6 @@ class MainActivity : AppCompatActivity() {
             modifier = Modifier.padding(top = 24.dp),
             onClick = { },
             border = BorderStroke(1.dp, Color.White.copy(alpha = 0.2F)),
-            backgroundColor = Colors.dark,
             shape = CircleShape
         ) {
             Text(
@@ -398,7 +418,8 @@ class MainActivity : AppCompatActivity() {
     }
 
     @Composable
-    private fun sidebar() {
+    private fun sidebar(navController: NavHostController) {
+        var selectedTab = remember { mutableStateOf(SeaFood) }
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
             modifier = Modifier.width(64.dp)
@@ -414,24 +435,32 @@ class MainActivity : AppCompatActivity() {
                 verticalArrangement = Arrangement.Center,
                 modifier = Modifier.weight(1F).padding(top = 64.dp)
             ) {
-                Text(
-                    text = "First Food",
-                    style = TextStyles.sidebar,
-                    modifier = rotationModifier.size(100.dp)
-                )
-                Text(
-                    text = "Salad",
-                    style = TextStyles.sidebar,
-                    modifier = rotationModifier.size(100.dp)
-                )
-                Text(
-                    text = "Sea Food",
-                    style = TextStyles.sidebar,
-                    modifier = rotationModifier.size(100.dp)
-                )
+                FoodTypes.values().forEach {
+                    Box(
+                        modifier = Modifier.size(width = 64.dp, height = 100.dp)
+                            .clickable(onClick = {
+                                selectedTab.value = it
+                                navController.navigate(it.name)
+                            })
+                    ) {
+                        Text(
+                            text = it.name,
+                            style = TextStyles.sidebar.copy(
+                                color = if (selectedTab.value == it) Color.White else Colors.tabUnselected,
+                            ),
+                            modifier = Modifier
+                                .align(Alignment.Center)
+                                .drawLayer(rotationZ = -90F)
+                        )
+                    }
+                }
             }
         }
     }
+}
+
+enum class FoodTypes {
+    SeaFood, Salad, FirstFood
 }
 
 enum class Filter {

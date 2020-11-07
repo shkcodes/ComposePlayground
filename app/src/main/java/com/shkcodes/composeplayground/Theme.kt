@@ -28,6 +28,7 @@ object Colors {
     val accent = Color(0xFFFFC107)
     val dark = Color(0xFF191919)
     val favoriteButton = Color(0xFFFDF4F2)
+    val tabUnselected = Color(0xFF555555)
 }
 
 object TextStyles {
@@ -37,7 +38,7 @@ object TextStyles {
     )
 
     val sidebar = default.copy(
-        fontSize = 20.sp,
+        fontSize = 16.sp,
         fontFamily = fontFamily(font(R.font.champagne_bold))
     )
 }
