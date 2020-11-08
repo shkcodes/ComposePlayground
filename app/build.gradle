@@ -57,8 +57,6 @@ dependencies {
     implementation 'androidx.ui:ui-tooling:1.0.0-alpha06'
     implementation 'androidx.compose.foundation:foundation:1.0.0-alpha06'
     implementation 'androidx.compose.material:material:1.0.0-alpha06'
-    implementation 'androidx.compose.material:material-icons-core:1.0.0-alpha06'
-    implementation 'androidx.compose.material:material-icons-extended:1.0.0-alpha06'
     implementation 'androidx.navigation:navigation-compose:1.0.0-alpha01'
 
 }
