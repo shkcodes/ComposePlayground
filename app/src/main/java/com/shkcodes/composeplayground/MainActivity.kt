@@ -3,6 +3,9 @@ package com.shkcodes.composeplayground
 import android.os.Bundle
 import androidx.annotation.DrawableRes
 import androidx.appcompat.app.AppCompatActivity
+import androidx.compose.animation.animatedFloat
+import androidx.compose.animation.core.repeatable
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.layout.Box
@@ -11,14 +14,12 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Button
 import androidx.compose.material.ButtonConstants
 import androidx.compose.material.OutlinedButton
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateListOf
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.drawLayer
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.SolidColor
@@ -68,6 +69,59 @@ class MainActivity : AppCompatActivity() {
                 }
             }
         }
+    }
+
+    @Composable
+    private fun tabSelectionAnimation(modifier: Modifier = Modifier) {
+        val animatedProgress = animatedFloat(0f)
+        onActive {
+            animatedProgress.animateTo(
+                1F, anim = repeatable(
+                    iterations = 1,
+                    animation = tween(durationMillis = 1000),
+                )
+            )
+        }
+
+        val strokeWidth = 6f
+        val brush = SolidColor(Colors.accent)
+        Canvas(modifier = modifier, onDraw = {
+            if (animatedProgress.value <= 0.5) {
+                drawLine(
+                    brush,
+                    Offset(size.width, 0F),
+                    Offset(
+                        size.width * (1 - animatedProgress.value),
+                        size.height * animatedProgress.value
+                    ),
+                    strokeWidth = strokeWidth
+                )
+            } else {
+                drawLine(
+                    brush,
+                    Offset(size.width, 0F),
+                    Offset(size.width / 2, size.height / 2),
+                    strokeWidth = strokeWidth
+                )
+                drawLine(
+                    brush,
+                    Offset(
+                        size.width / 2, size.height
+                                / 2
+                    ),
+                    Offset(
+                        size.width * animatedProgress.value,
+                        size.height * animatedProgress.value
+                    ),
+                    strokeWidth = strokeWidth
+                )
+            }
+            drawCircle(
+                brush,
+                animatedProgress.value * 10F,
+                Offset(size.width * 0.8F, size.height / 2F)
+            )
+        })
     }
 
     @Composable
@@ -451,6 +505,9 @@ class MainActivity : AppCompatActivity() {
                             modifier = Modifier
                                 .align(Alignment.Center)
                                 .drawLayer(rotationZ = -90F)
+                        )
+                        if (selectedTab.value == it) tabSelectionAnimation(
+                            modifier = Modifier.align(Alignment.CenterEnd).size(32.dp)
                         )
                     }
                 }
