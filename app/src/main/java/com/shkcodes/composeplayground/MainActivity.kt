@@ -61,25 +61,31 @@ class MainActivity : AppCompatActivity() {
 
     @Composable
     private fun sidebar(navController: NavHostController) {
-        var selectedTab = remember { mutableStateOf(SeaFood) }
+        val selectedTab = remember { mutableStateOf(SeaFood) }
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
-            modifier = Modifier.width(64.dp)
+            modifier = Modifier
+                .width(64.dp)
                 .background(color = Colors.sidebar)
                 .padding(vertical = 8.dp)
         ) {
             Image(
                 imageResource(id = R.drawable.profile),
                 contentScale = ContentScale.Crop,
-                modifier = Modifier.preferredSize(42.dp).clip(CircleShape)
+                modifier = Modifier
+                    .preferredSize(42.dp)
+                    .clip(CircleShape)
             )
             Column(
                 verticalArrangement = Arrangement.Center,
-                modifier = Modifier.weight(1F).padding(top = 64.dp)
+                modifier = Modifier
+                    .weight(1F)
+                    .padding(top = 64.dp)
             ) {
                 FoodTypes.values().forEach {
                     Box(
-                        modifier = Modifier.size(width = 64.dp, height = 100.dp)
+                        modifier = Modifier
+                            .size(width = 64.dp, height = 100.dp)
                             .clickable(onClick = {
                                 selectedTab.value = it
                                 navController.navigate(it.name)
@@ -95,7 +101,9 @@ class MainActivity : AppCompatActivity() {
                                 .drawLayer(rotationZ = -90F)
                         )
                         if (selectedTab.value == it) tabSelectionAnimation(
-                            modifier = Modifier.align(Alignment.CenterEnd).size(32.dp)
+                            modifier = Modifier
+                                .align(Alignment.CenterEnd)
+                                .size(32.dp)
                         )
                     }
                 }
